@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎂 ¡Feliz Cumpleaños!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at top, #1a0533 0%, #0d001a 60%, #000 100%);
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ── Stars ── */
+    #stars-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Confetti canvas ── */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── Fireworks canvas ── */
+    #fw-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── Main card ── */
+    .card {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 3rem 4rem;
+      border-radius: 2rem;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        0 0 60px rgba(200, 80, 255, 0.25),
+        0 0 120px rgba(80, 120, 255, 0.15),
+        inset 0 0 40px rgba(255,255,255,0.03);
+      animation: cardFloat 4s ease-in-out infinite;
+      max-width: 600px;
+      width: 90vw;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .cake-emoji {
+      font-size: 5rem;
+      display: block;
+      animation: cakeBounce 0.8s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 16px rgba(255,200,0,0.7));
+    }
+
+    @keyframes cakeBounce {
+      from { transform: scale(1) rotate(-3deg); }
+      to   { transform: scale(1.08) rotate(3deg); }
+    }
+
+    .title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      background: linear-gradient(135deg, #ff9de2, #ffd700, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 300% 300%;
+      animation: shimmer 4s linear infinite;
+      line-height: 1.1;
+      margin: 0.4rem 0;
+      text-shadow: none;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c084fc, #60a5fa, transparent);
+      margin: 1rem auto;
+      border-radius: 1px;
+    }
+
+    .message {
+      color: rgba(255,255,255,0.85);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 420px;
+      margin: 0 auto 1.8rem;
+    }
+
+    /* ── Sound button ── */
+    .btn-sound {
+      background: linear-gradient(135deg, #9333ea, #4f46e5);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 2rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(147,51,234,0.5);
+    }
+
+    .btn-sound:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 30px rgba(147,51,234,0.7);
+    }
+
+    .btn-sound:active {
+      transform: scale(0.97);
+    }
+
+    /* ── Floating hearts ── */
+    .heart {
+      position: fixed;
+      z-index: 5;
+      font-size: 1.4rem;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(-120px) scale(1.5) rotate(30deg); }
+    }
+
+    /* ── Glow orbs ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .orb1 {
+      width: 350px; height: 350px;
+      background: rgba(147,51,234,0.18);
+      top: -80px; left: -80px;
+      animation: orbMove1 8s ease-in-out infinite alternate;
+    }
+
+    .orb2 {
+      width: 280px; height: 280px;
+      background: rgba(79,70,229,0.18);
+      bottom: -60px; right: -60px;
+      animation: orbMove2 10s ease-in-out infinite alternate;
+    }
+
+    .orb3 {
+      width: 200px; height: 200px;
+      background: rgba(251,191,36,0.12);
+      bottom: 30%; left: 10%;
+      animation: orbMove1 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes orbMove1 {
+      from { transform: translate(0,0); }
+      to   { transform: translate(60px, 40px); }
+    }
+    @keyframes orbMove2 {
+      from { transform: translate(0,0); }
+      to   { transform: translate(-50px, -40px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <canvas id="stars-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+  <canvas id="fw-canvas"></canvas>
+
+  <!-- Glow orbs -->
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- Main card -->
+  <div class="card">
+    <span class="cake-emoji">🎂</span>
+    <h1 class="title">¡Feliz Cumpleaños!</h1>
+    <p class="subtitle">✨ Un día muy especial ✨</p>
+    <div class="divider"></div>
+    <p class="message">
+      Que este día esté lleno de alegría, amor y momentos increíbles.<br>
+      ¡Que todos tus deseos se hagan realidad! 🎉🌟🎊
+    </p>
+    <button class="btn-sound" onclick="playCelebration()">🎵 Reproducir música</button>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════
+       STARS
+    ═══════════════════════════════════════ */
+    (function initStars() {
+      const canvas = document.getElementById('stars-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, stars = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function createStars(n) {
+        stars = [];
+        for (let i = 0; i < n; i++) {
+          stars.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.4 + 0.3,
+            alpha: Math.random(),
+            speed: Math.random() * 0.006 + 0.002,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      let t = 0;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        t += 0.016;
+        stars.forEach(s => {
+          const a = 0.4 + 0.6 * Math.abs(Math.sin(t * s.speed * 60 + s.phase));
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${a})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      createStars(180);
+      draw();
+      window.addEventListener('resize', () => { resize(); createStars(180); });
+    })();
+
+    /* ═══════════════════════════════════════
+       CONFETTI
+    ═══════════════════════════════════════ */
+    (function initConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, pieces = [];
+
+      const COLORS = ['#ffd700','#ff69b4','#00cfff','#a78bfa','#34d399','#fb923c'];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function spawn(n) {
+        for (let i = 0; i < n; i++) {
+          pieces.push({
+            x: Math.random() * W,
+            y: -10 - Math.random() * 60,
+            w: 8 + Math.random() * 8,
+            h: 4 + Math.random() * 5,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            vx: (Math.random() - 0.5) * 2.5,
+            vy: 1.5 + Math.random() * 3,
+            angle: Math.random() * Math.PI * 2,
+            spin: (Math.random() - 0.5) * 0.15,
+            opacity: 0.9
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        if (Math.random() < 0.25) spawn(3);
+
+        pieces = pieces.filter(p => p.y < H + 20);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.angle += p.spin;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      spawn(80);
+      draw();
+      window.addEventListener('resize', resize);
+    })();
+
+    /* ═══════════════════════════════════════
+       FIREWORKS
+    ═══════════════════════════════════════ */
+    (function initFireworks() {
+      const canvas = document.getElementById('fw-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H;
+      const rockets = [], particles = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      const FW_COLORS = ['#ffd700','#ff6eb4','#60a5fa','#a78bfa','#34d399','#fb923c','#f87171'];
+
+      function launchRocket() {
+        rockets.push({
+          x: W * (0.15 + Math.random() * 0.7),
+          y: H,
+          tx: W * (0.1 + Math.random() * 0.8),
+          ty: H * (0.1 + Math.random() * 0.45),
+          speed: 9 + Math.random() * 5,
+          color: FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)]
+        });
+      }
+
+      function explode(x, y, color) {
+        const n = 60 + Math.floor(Math.random() * 40);
+        for (let i = 0; i < n; i++) {
+          const angle = (Math.PI * 2 / n) * i + (Math.random() - 0.5) * 0.3;
+          const speed = 2 + Math.random() * 4.5;
+          particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            decay: 0.015 + Math.random() * 0.02,
+            size: 2.5 + Math.random() * 2,
+            color
+          });
+        }
+      }
+
+      let nextLaunch = 0;
+      function draw(ts) {
+        ctx.fillStyle = 'rgba(0,0,0,0.18)';
+        ctx.fillRect(0, 0, W, H);
+
+        if (ts > nextLaunch) {
+          launchRocket();
+          nextLaunch = ts + 700 + Math.random() * 1200;
+        }
+
+        // rockets
+        for (let i = rockets.length - 1; i >= 0; i--) {
+          const r = rockets[i];
+          const dx = r.tx - r.x, dy = r.ty - r.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < r.speed) {
+            explode(r.x, r.y, r.color);
+            rockets.splice(i, 1);
+          } else {
+            r.x += (dx / dist) * r.speed;
+            r.y += (dy / dist) * r.speed;
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = r.color;
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, 6, 0, Math.PI * 2);
+            ctx.fillStyle = r.color + '44';
+            ctx.fill();
+          }
+        }
+
+        // particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.06;
+          p.life -= p.decay;
+          if (p.life <= 0) { particles.splice(i, 1); continue; }
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      requestAnimationFrame(draw);
+      window.addEventListener('resize', resize);
+    })();
+
+    /* ═══════════════════════════════════════
+       FLOATING HEARTS on click/tap
+    ═══════════════════════════════════════ */
+    document.addEventListener('click', e => {
+      spawnHeart(e.clientX, e.clientY);
+    });
+
+    function spawnHeart(x, y) {
+      const emojis = ['❤️','💜','💛','💙','💖','🌟','✨'];
+      const el = document.createElement('div');
+      el.className = 'heart';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      el.style.animationDuration = (0.9 + Math.random() * 0.6) + 's';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    /* ═══════════════════════════════════════
+       SOUNDS via Web Audio API
+    ═══════════════════════════════════════ */
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playNote(freq, startTime, duration, type = 'sine', gain = 0.35) {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const reverb = ctx.createConvolver();
+
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(gain, startTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.1);
+    }
+
+    function playChime(baseTime) {
+      const ctx = getAudioCtx();
+      // Pentatonic-ish sparkle
+      const sparkle = [1046.5, 1318.5, 1568, 2093, 1760, 2093, 1568];
+      sparkle.forEach((f, i) => {
+        playNote(f, baseTime + i * 0.09, 0.4, 'sine', 0.15);
+      });
+    }
+
+    function playPopSound(t) {
+      const ctx = getAudioCtx();
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.15, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.04));
+      }
+      const source = ctx.createBufferSource();
+      source.buffer = buf;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.35, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      source.start(t);
+    }
+
+    // Happy Birthday melody (C major)
+    const NOTE = {
+      C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+      G4: 392.00, A4: 440.00, B4: 493.88,
+      C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46,
+      G5: 783.99, A5: 880.00
+    };
+
+    // Happy Birthday melody: note, duration (beats), gap
+    const MELODY = [
+      // "Hap-py Birth-day to you"
+      [NOTE.C4, 0.75], [NOTE.C4, 0.25], [NOTE.D4, 1], [NOTE.C4, 1], [NOTE.F4, 1], [NOTE.E4, 2],
+      // "Hap-py Birth-day to you"
+      [NOTE.C4, 0.75], [NOTE.C4, 0.25], [NOTE.D4, 1], [NOTE.C4, 1], [NOTE.G4, 1], [NOTE.F4, 2],
+      // "Hap-py Birth-day dear ..."
+      [NOTE.C4, 0.75], [NOTE.C4, 0.25], [NOTE.C5, 1], [NOTE.A4, 1], [NOTE.F4, 1], [NOTE.E4, 1], [NOTE.D4, 2],
+      // "Hap-py Birth-day to you"
+      [NOTE.A4, 0.75], [NOTE.A4, 0.25], [NOTE.G4, 1], [NOTE.F4, 1], [NOTE.G4, 1], [NOTE.F4, 3]
+    ];
+
+    const BPM = 120;
+    const BEAT = 60 / BPM;
+
+    function playCelebration() {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime + 0.05;
+
+      // Pops at start
+      for (let i = 0; i < 4; i++) playPopSound(now + i * 0.18);
+
+      // Chime intro
+      playChime(now + 0.05);
+
+      // Play melody
+      let t = now + 0.9;
+      MELODY.forEach(([freq, beats]) => {
+        // main melody
+        playNote(freq, t, beats * BEAT * 0.85, 'sine', 0.4);
+        // harmony a third above
+        playNote(freq * 1.25, t, beats * BEAT * 0.8, 'triangle', 0.1);
+        t += beats * BEAT;
+      });
+
+      // Chime outro
+      playChime(t);
+
+      // Final pop burst
+      for (let i = 0; i < 6; i++) playPopSound(t + i * 0.12);
+
+      // Visual hearts burst
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => {
+          spawnHeart(
+            window.innerWidth  * (0.1 + Math.random() * 0.8),
+            window.innerHeight * (0.2 + Math.random() * 0.6)
+          );
+        }, i * 120);
+      }
+
+      // Change button text temporarily
+      const btn = document.querySelector('.btn-sound');
+      btn.textContent = '🎶 ¡Sonando!';
+      setTimeout(() => { btn.textContent = '🎵 Reproducir música'; }, (t - now + 1) * 1000);
+    }
+  </script>
+</body>
+</html>
